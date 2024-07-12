@@ -1,3 +1,3 @@
 # AuthNGo
 
-#### Go based authentication service. It's under development and also It will support various databases.
+#### Fully open-source authentication service. It's under development and also It will support various databases.
