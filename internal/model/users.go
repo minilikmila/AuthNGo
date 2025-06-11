@@ -6,8 +6,8 @@ import (
 	"time"
 
 	uuid "github.com/google/uuid"
-	"github.com/minilikmila/goAuth/db"
-	"github.com/minilikmila/goAuth/utils"
+	"github.com/minilikmila/standard-auth-go/utils"
+
 	"gorm.io/gorm"
 )
 
@@ -61,19 +61,19 @@ func (u *User) Create(db *gorm.DB) error {
 }
 
 // Update user data....
-func (u *User) Save(db db.Database) error {
+func (u *User) Save(db *gorm.DB) error {
 
-	return db.DB().Save(u).Error
+	return db.Save(u).Error
 
 }
 
 // Invite user by email
-func (u *User) InviteByEmail(db db.Database, email string, name string) error {
+func (u *User) InviteByEmail(db *gorm.DB, email string, name string) error {
 	return nil
 }
 
 // Invite user by phone
-func (u *User) InviteByPhone(db db.Database, phone string, name string) error {
+func (u *User) InviteByPhone(db *gorm.DB, phone string, name string) error {
 	return nil
 }
 
@@ -88,6 +88,6 @@ func (u *User) SetPassword(password string, cost int) error {
 }
 
 // Here we count user wrong attempts ( increment user.wrong_attempt++ field)
-func (u *User) IncorrectAttempt(db gorm.DB, log Log) error {
+func (u *User) IncorrectAttempt(db *gorm.DB, log Log) error {
 	return nil
 }
