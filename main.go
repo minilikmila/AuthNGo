@@ -6,7 +6,7 @@ import (
 	"os"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/minilikmila/goAuth/cmd"
+	"github.com/minilikmila/standard-auth-go/cmd"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -19,7 +19,6 @@ func init() {
 	log.SetOutput(os.Stdout)
 	// // Only log the warning severity or above.
 	// log.SetLevel(log.WarnLevel)
-	log.SetFormatter(&log.JSONFormatter{})
 
 	log.SetOutput(os.Stdout)
 	// log.SetLevel(config.LogLevel)
@@ -27,10 +26,11 @@ func init() {
 }
 
 var (
-	DevMode = flag.Bool("dev", false, "development mood")
+	// DevMode = flag.Bool("dev", false, "development mood")
+	DevMode = flag.String("mode", "dev", "development mood")
 )
 
-//go:embed migrations/*.sql
+//go:embed internal/migrations/*.sql
 var files embed.FS
 
 func main() {
@@ -38,9 +38,17 @@ func main() {
 	flag.Parse()
 
 	log.SetFormatter(&log.TextFormatter{FullTimestamp: true})
-	if *DevMode {
-		log.SetFormatter(&log.JSONFormatter{})
+	// if *DevMode {
+	// 	log.SetFormatter(&log.JSONFormatter{})
+	// }
+	log.Println("DevMode: ", *DevMode)
+
+	args := map[string]string{
+		"mode": *DevMode,
+	}
+	if *DevMode == "dev" {
+		args["mode"] = "debug"
 	}
 
-	cmd.Run(files)
+	cmd.Run(files, args)
 }
