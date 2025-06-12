@@ -39,7 +39,7 @@ func Run(files embed.FS, args map[string]string) {
 
 	host := fmt.Sprintf("%s:%v", config.Host, config.Port)
 
-	logrus.WithField("host", "http://"+host).Info("started goAuth server")
+	logrus.WithField("host", "http://"+host).Info("started Go authentication server")
 
 	logrus.Fatalln(http.ListenAndServe(fmt.Sprintf("%s:%v", config.Host, config.Port), routes))
 	// routes.Run(":"+config.Config.App.Port)
