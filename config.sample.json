@@ -1,0 +1,37 @@
+{
+  "host": "localhost",
+  "port": 5001,
+  "database_uri": "postgresql://postgres:milaPasswordql@localhost:5432/auth-store?sslmode=disable",
+  "instance_url": "http://localhost:5001",
+  "jwt": {
+    "algorithm": "RS512",
+    "private_key_path": "./private.pem",
+    "public_key_path": "./public.pem",
+    "expiry": 2000,
+    "audience": "standard-auth.com",
+    "issuer": "standard-auth-team"
+  },
+  "google": {
+    "enabled": true,
+    "client_id": "95024659296-idsigpc9blspq94eq6tp2elrv65lcj5p.apps.googleusercontent.com",
+    "secret_id": "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"
+  },
+  "facebook": {
+    "enabled": false,
+    "client_id": "",
+    "secret_id": ""
+  },
+  "linkedin": {
+    "enabled": false,
+    "client_id": "",
+    "secret_id": ""
+  },
+  "session_cookie_name": "go_auth_session",
+  "smtp_host": "sandbox.smtp.mailtrap.io",
+  "smtp_port": "2525",
+  "smtp_user": "e3a59733b8fc57",
+  "smtp_pass": "e770260e491e40",
+  "smtp_from": "solution@gmail.com",
+  "company_name": "Habel",
+  "app_url": "http://localhost:4000"
+}
