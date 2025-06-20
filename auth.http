@@ -1,0 +1,52 @@
+### Signup
+POST http://localhost:5001/api/v1/auth/sign-up
+Content-Type: application/json
+
+{
+  "name": "Test User 2",
+  "email": "fahire2285@ethsms.com",
+  "phone": "+1234567890",
+  "password": "TestPassword123!"
+}
+
+### Login
+POST http://localhost:5001/api/v1/auth/login
+Content-Type: application/json
+
+{
+  "email": "fahire2285@ethsms.com",
+  "password": "TestPassword123!"
+} 
+
+### Vefify Email
+POST http://localhost:5001/api/v1/auth/verify-email
+Content-Type: application/json
+
+{
+  "token": "email_verify_token"
+}
+
+### Forgot password
+POST http://localhost:5001/api/v1/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "fahire2285@ethsms.com"
+} 
+
+### Reset password
+POST http://localhost:5001/api/v1/auth/reset-password
+Content-Type: application/json
+
+{
+  "new_password": "newPassword1",
+  "token": "reset_token"
+}
+
+### Profile password 
+GET  http://localhost:5001/api/v1/profile/8032ef1f-d52b-458b-a983-c05588235e0e
+Content-Type: application/json
+
+### Logout // ACCESS TOKEN is stored in cookie , or you can pass BEARER token through Authorization header
+POST   http://localhost:5001/api/v1/auth/logout
+Content-Type: application/json

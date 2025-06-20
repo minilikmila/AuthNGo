@@ -33,3 +33,5 @@ config.rev.json
 # OS specific files
 .DS_Store
 Thumbs.db
+
+bin/
