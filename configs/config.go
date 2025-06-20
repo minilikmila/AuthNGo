@@ -1,11 +1,11 @@
-package config
+package configs
 
 import (
 	"encoding/json"
 	"os"
 	"time"
 
-	"github.com/minilikmila/standard-auth-go/internal/crypto"
+	"github.com/minilikmila/standard-auth-go/internal/auth/crypto"
 )
 
 type JWTConfig struct {
@@ -64,6 +64,14 @@ type Config struct {
 	LockoutPolicy            LockoutPolicy    `json:"lockout_policy"`
 	AdminRoles               []string         `json:"admin_roles"`
 	ReadOnlyRoles            []string         `json:"read_only_roles"`
+	// Email service
+	SMTPHost    string `json:"smtp_host"`
+	SMTPPort    string `json:"smtp_port"`
+	SMTPUser    string `json:"smtp_user"`
+	SMTPPass    string `json:"smtp_pass"`
+	SMTPFrom    string `json:"smtp_from"`
+	CompanyName string `json:"company_name"`
+	AppURL      string `json:"app_url"`
 }
 
 func DefaultConfig() *Config {

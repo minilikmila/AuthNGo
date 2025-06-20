@@ -4,44 +4,54 @@ import (
 	"embed"
 	"fmt"
 	"net/http"
-	"os"
 
 	_ "github.com/golang-migrate/migrate/v4/database/postgres"
-	"github.com/minilikmila/standard-auth-go/config"
-	database_ "github.com/minilikmila/standard-auth-go/internal/database"
-	"github.com/minilikmila/standard-auth-go/internal/routes"
-
+	config "github.com/minilikmila/standard-auth-go/configs"
+	"github.com/minilikmila/standard-auth-go/internal/api/routes"
+	jwt_ "github.com/minilikmila/standard-auth-go/internal/auth/jwt"
+	"github.com/minilikmila/standard-auth-go/internal/infrastructure/database"
+	"github.com/minilikmila/standard-auth-go/internal/service"
 	"github.com/sirupsen/logrus"
 )
 
-// var logger = log.New()
-
 func Run(files embed.FS, args map[string]string) {
-
 	mode, ok := args["mode"]
 	if !ok {
 		mode = "debug"
 	}
 
-	config, err := config.New("config.json")
+	// Load configuration
+	cfg, err := config.New("config.json")
 	if err != nil {
-		fmt.Println("db conn error ", err)
-		os.Exit(1)
+		logrus.Fatalf("Failed to load config: %v", err)
 	}
+
 	// Initialize Database connection
-	db, err := database_.InitDatabase(config)
+	db, err := database.InitDatabase(cfg)
 	if err != nil {
-		fmt.Println("db conn error ", err)
-		os.Exit(1)
+		logrus.Fatalf("Failed to initialize database: %v", err)
 	}
 
-	routes := routes.InitRoute(db, config, mode)
+	// Initialize repository
+	repo := database.NewRepository(db.DB())
 
-	host := fmt.Sprintf("%s:%v", config.Host, config.Port)
+	// Initialize JWT service
+	jwtService := jwt_.NewJWTService(cfg)
 
-	logrus.WithField("host", "http://"+host).Info("started Go authentication server")
+	// Initialize email service (you'll need to implement this)
+	emailService := service.NewEmailService(cfg)
 
-	logrus.Fatalln(http.ListenAndServe(fmt.Sprintf("%s:%v", config.Host, config.Port), routes))
-	// routes.Run(":"+config.Config.App.Port)
+	// Initialize SMS service (you'll need to implement this)
+	smsService := service.NewSMSService(cfg)
 
+	// Initialize auth service
+	authService := service.NewAuthService(repo, cfg, emailService, smsService, jwtService)
+
+	// Initialize routes with all services
+	routes := routes.InitRoute(repo, cfg, mode, authService)
+
+	host := fmt.Sprintf("%s:%v", cfg.Host, cfg.Port)
+	logrus.WithField("host", "http://"+host).Info("Started Go authentication server")
+
+	logrus.Fatalln(http.ListenAndServe(host, routes))
 }
