@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  # This start the container from local image
+  # app:
+  #   build:
+  #     context: .. # The context is the project root, one level up
+  #     dockerfile: docker/Dockerfile # The Dockerfile is in the same directory
+  #   ports:
+  #     - 8080:8080
+  #   volumes:
+  #     # Mount config and keys from the project root (context directory)
+  #     # These are mounted as read-only for security
+  #     - ../config.json:/app/config.json:ro
+  #     - ../private.pem:/app/private.pem:ro
+  #     - ../public.pem:/app/public.pem:ro
+  #   restart: unless-stopped
+  #TODO: This start the container from remote repository / remote image
+  goauth-app:
+    image: egapesas/auth:latest
+    container_name: goauth-app
+    ports:
+      - 5001:8080
+    volumes:
+      # Mount config and keys from the project root (context directory)
+      # These are mounted as read-only for security
+      - ../config.json:/app/config.json:ro
+      - ../private.pem:/app/private.pem:ro
+      - ../public.pem:/app/public.pem:ro
+    restart: unless-stopped
