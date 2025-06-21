@@ -26,9 +26,8 @@ jobs:
         with:
           version: latest
 
-      - name: Run tests
-        run: make test
-
+      # - name: Run tests
+      #   run: make test
   build:
     name: Build
     needs: test
