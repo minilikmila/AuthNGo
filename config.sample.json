@@ -13,8 +13,8 @@
   },
   "google": {
     "enabled": true,
-    "client_id": "95024659296-idsigpc9blspq94eq6tp2elrv65lcj5p.apps.googleusercontent.com",
-    "secret_id": "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"
+    "client_id": "",
+    "secret_id": ""
   },
   "facebook": {
     "enabled": false,

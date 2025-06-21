@@ -7,6 +7,8 @@ conf.sample
 dist
 *.env
 LICENSE
+README.md
+config.*
 
 # Exclude git history and configuration
 .git
