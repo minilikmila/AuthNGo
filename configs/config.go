@@ -77,7 +77,7 @@ type Config struct {
 func DefaultConfig() *Config {
 	return &Config{
 		Host:                  "localhost",
-		Port:                  3001,
+		Port:                  8080,
 		DatabaseUri:           "",
 		MaxConnectionPoolSize: 10,
 		DisableSignup:         false,

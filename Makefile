@@ -1,4 +1,4 @@
-.PHONY: all build test clean run run-dev docker-build docker-run lint
+.PHONY: all build test clean run run-dev docker-build docker-run docker-down lint
 
 # Variables
 BINARY_NAME=auth
@@ -39,10 +39,19 @@ docker-build:
 	@echo "Building Docker image..."
 	@docker build -t $(BINARY_NAME):latest -f docker/Dockerfile .
 
-# Run Docker container
+# Run Docker container <hostPort>:<containerPort> - container port must be the same for the port defined in conf.json or default 8080
 docker-run:
 	@echo "Running Docker container..."
-	@docker run -p 8080:8080 $(BINARY_NAME):latest
+	@docker run --rm -p 5001:8080 \
+		-v $(CURDIR)/config.json:/app/config.json:ro \
+		-v $(CURDIR)/private.pem:/app/private.pem:ro \
+		-v $(CURDIR)/public.pem:/app/public.pem:ro \
+		$(BINARY_NAME):latest
+
+# Stop and remove Docker container using docker-compose
+docker-down:
+	@echo "Stopping Docker container..."
+	@docker-compose -f docker/docker-compose.yml down
 
 # Run linter
 lint:
@@ -68,3 +77,9 @@ migrate-down:
 health:
 	@echo "Checking health..."
 	@curl -X GET http://localhost:8080/api/v1/auth/health -w "\n"
+
+# To run the service built locally
+docker-compose-up:
+	@docker-compose -f docker/docker-compose.yml up goauth-app -d
+# @docker-compose -f docker/docker-compose.yml up app -d
+# To run the service from Docker Hub

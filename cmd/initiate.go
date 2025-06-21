@@ -50,8 +50,8 @@ func Run(files embed.FS, args map[string]string) {
 	// Initialize routes with all services
 	routes := routes.InitRoute(repo, cfg, mode, authService)
 
-	host := fmt.Sprintf("%s:%v", cfg.Host, cfg.Port)
+	host := fmt.Sprintf("%s:%v", "0.0.0.0", cfg.Port)
 	logrus.WithField("host", "http://"+host).Info("Started Go authentication server")
 
-	logrus.Fatalln(http.ListenAndServe(host, routes))
+	logrus.Fatalln(http.ListenAndServe(fmt.Sprintf("0.0.0.0:%d", cfg.Port), routes))
 }
