@@ -29,6 +29,8 @@ WORKDIR /app
 # Copy the static binary from the builder stage
 COPY --from=builder /auth .
 
+COPY templates ./templates
+
 # Expose the port the application will run on
 EXPOSE 8080
 
