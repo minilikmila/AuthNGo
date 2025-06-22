@@ -17,7 +17,7 @@ services:
   #   restart: unless-stopped
   #TODO: This start the container from remote repository / remote image
   goauth-app:
-    image: egapesas/auth:latest
+    image: egapesas/auth:d3960cb
     container_name: goauth-app
     ports:
       - 5001:8080
