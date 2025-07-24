@@ -179,10 +179,12 @@ func Login(authService service.AuthService) gin.HandlerFunc {
 			StatusCode: http.StatusOK,
 			Data: gin.H{
 				"user": gin.H{
-					"id":    user.ID,
-					"name":  user.Name,
-					"email": user.Email,
-					"role":  user.Role,
+					"id":              user.ID,
+					"name":            user.Name,
+					"email":           user.Email,
+					"role":            user.Role,
+					"phone":           user.Phone,
+					"profile_picture": user.ProfilePicture,
 				},
 				"access_token":  accessToken,
 				"refresh_token": refreshToken,
