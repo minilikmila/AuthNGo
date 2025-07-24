@@ -9,10 +9,8 @@ dist
 LICENSE
 README.md
 config.*
+*.pem
 
 # Exclude git history and configuration
 .git
 .gitignore
-
-# Exclude "build-time" ignore file
-.dockerignore
