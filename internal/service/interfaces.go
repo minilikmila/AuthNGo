@@ -41,6 +41,7 @@ type AuthService interface {
 	// Password Management
 	ForgotPassword(ctx context.Context, email string) error
 	ResetPassword(ctx context.Context, token, newPassword string) error
+	UpdatePassword(ctx context.Context, userID string, currentPassword string, newPassword string) error
 
 	// Token Management
 	RefreshToken(ctx context.Context, refreshToken string) (string, string, error)

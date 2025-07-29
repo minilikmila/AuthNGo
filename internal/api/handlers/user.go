@@ -472,7 +472,8 @@ func GetProfile(authService service.AuthService) gin.HandlerFunc {
 // UpdateProfile handles profile updates
 func UpdateProfile(authService service.AuthService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		userID := ctx.GetString("user_id")
+		// userID := ctx.GetString("user_id")
+		userID := ctx.Param("id")
 		if userID == "" {
 			ctx.JSON(http.StatusUnauthorized, model.Response{
 				Message:    "Unauthorized",
@@ -501,52 +502,78 @@ func UpdateProfile(authService service.AuthService) gin.HandlerFunc {
 			return
 		}
 
+		user, err := authService.GetProfile(ctx, userID)
+		if err != nil {
+			ctx.JSON(http.StatusInternalServerError, model.Response{
+				Message:    "error returning profile",
+				StatusCode: http.StatusInternalServerError,
+				Error:      err,
+			})
+			return
+		}
+
 		ctx.JSON(http.StatusOK, model.Response{
 			Message:    "Profile updated successfully",
 			StatusCode: http.StatusOK,
+			Data: gin.H{
+				"user": gin.H{
+					"id":                user.ID,
+					"name":              user.Name,
+					"email":             user.Email,
+					"phone":             user.Phone,
+					"role":              user.Role,
+					"profile_picture":   user.ProfilePicture,
+					"sign_up_method":    user.SignUpMethod,
+					"is_email_verified": user.IsEmailVerified,
+					"is_phone_verified": user.IsPhoneVerified,
+					"last_login_at":     user.LastLoginAt,
+					"email_verified_at": user.EmailVerifiedAt,
+					"phone_verified_at": user.PhoneVerifiedAt,
+				},
+			},
 		})
 	}
 }
 
-// // ChangePassword handles password change
-// func ChangePassword(authService service.AuthService) gin.HandlerFunc {
-// 	return func(ctx *gin.Context) {
-// 		userID := ctx.GetString("user_id")
-// 		if userID == "" {
-// 			ctx.JSON(http.StatusUnauthorized, model.Response{
-// 				Message:    "Unauthorized",
-// 				StatusCode: http.StatusUnauthorized,
-// 			})
-// 			return
-// 		}
+// ChangePassword handles password change
+func ChangePassword(authService service.AuthService) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		userID := ctx.Param("id")
+		if userID == "" {
+			ctx.JSON(http.StatusUnauthorized, model.Response{
+				Message:    "Unauthorized",
+				StatusCode: http.StatusUnauthorized,
+			})
+			return
+		}
 
-// 		var body struct {
-// 			CurrentPassword string `json:"current_password" binding:"required"`
-// 			NewPassword     string `json:"new_password" binding:"required,min=8"`
-// 		}
+		var body struct {
+			CurrentPassword string `json:"current_password" binding:"required"`
+			NewPassword     string `json:"new_password" binding:"required,min=8"`
+		}
 
-// 		if err := ctx.ShouldBindJSON(&body); err != nil {
-// 			ctx.JSON(http.StatusBadRequest, model.Response{
-// 				Message:    "Invalid request body",
-// 				StatusCode: http.StatusBadRequest,
-// 				Error:      err,
-// 			})
-// 			return
-// 		}
+		if err := ctx.ShouldBindJSON(&body); err != nil {
+			ctx.JSON(http.StatusBadRequest, model.Response{
+				Message:    "Invalid request body",
+				StatusCode: http.StatusBadRequest,
+				Error:      err,
+			})
+			return
+		}
 
-// 		if err := authService.UpdatePassword(ctx, userID, body.CurrentPassword, body.NewPassword); err != nil {
-// 			log.Errorf("Error changing password: %v", err)
-// 			ctx.JSON(http.StatusBadRequest, model.Response{
-// 				Message:    "Error changing password",
-// 				StatusCode: http.StatusBadRequest,
-// 				Error:      err,
-// 			})
-// 			return
-// 		}
+		if err := authService.UpdatePassword(ctx, userID, body.CurrentPassword, body.NewPassword); err != nil {
+			log.Errorf("Error changing password: %v", err)
+			ctx.JSON(http.StatusBadRequest, model.Response{
+				Message:    "Error changing password",
+				StatusCode: http.StatusBadRequest,
+				Error:      err,
+			})
+			return
+		}
 
-// 		ctx.JSON(http.StatusOK, model.Response{
-// 			Message:    "Password changed successfully",
-// 			StatusCode: http.StatusOK,
-// 		})
-// 	}
-// }
+		ctx.JSON(http.StatusOK, model.Response{
+			Message:    "Password changed successfully",
+			StatusCode: http.StatusOK,
+		})
+	}
+}

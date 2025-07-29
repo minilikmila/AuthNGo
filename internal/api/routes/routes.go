@@ -46,7 +46,7 @@ func InitRoute(db *database_.Repository, config *config.Config, envMode string, 
 	v2.PUT("/profile/:id", middleware.Authorize([]string{"admin", "user"},
 		nil,
 		middleware.CustomAuthorizePolicy), handlers.UpdateProfile(authService))
-	// v2.PUT("/change-password", handlers.ChangePassword(authService))
+	v2.PATCH("/change-password/:id", handlers.ChangePassword(authService))
 
 	v1.GET("/health", checkHealth)
 

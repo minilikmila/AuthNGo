@@ -16,7 +16,6 @@ import (
 // Validate user has valid authentication signature...
 func Authenticate(authService service.AuthService) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-
 		var accessToken string
 		header := ctx.GetHeader("Authorization")
 		if header != "" {
@@ -32,13 +31,13 @@ func Authenticate(authService service.AuthService) gin.HandlerFunc {
 		// Validate token
 		userId, err := authService.ValidateToken(ctx, accessToken)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token!"})
 			return
 		}
 
 		user, err := authService.GetProfile(ctx, userId)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
 			return
 		}
 		// TODO: validate token type is "access_token" not refresh

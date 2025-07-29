@@ -355,31 +355,24 @@ func (s *AuthServiceImpl) ResetPassword(ctx context.Context, token, newPassword 
 	return nil
 }
 
-func (s *AuthServiceImpl) UpdatePassword(ctx context.Context, userID string, currentPassword, newPassword string) error {
-	id, err := uuid.Parse(userID)
-	if err != nil {
-		return err
-	}
-
-	// Get user
-	user, err := s.repo.GetUserByID(ctx, id)
+// UpdatePassword changes the user's password after verifying the current password
+func (s *AuthServiceImpl) UpdatePassword(ctx context.Context, userID string, currentPassword string, newPassword string) error {
+	uid, err := uuid.Parse(userID)
 	if err != nil {
 		return ErrUserNotFound
 	}
-
-	// Verify current password
+	user, err := s.repo.GetUserByID(ctx, uid)
+	if err != nil {
+		return ErrUserNotFound
+	}
 	if !utils.ComparePassword(*user.Password, currentPassword) {
 		return ErrInvalidCredentials
 	}
-
-	// Hash new password
 	hashedPassword, err := utils.EncryptPassword(newPassword, 10)
 	if err != nil {
 		return err
 	}
-
-	// Update password
-	return s.repo.UpdatePassword(ctx, id, hashedPassword)
+	return s.repo.UpdatePassword(ctx, uid, hashedPassword)
 }
 
 // RefreshToken implements token refresh
@@ -408,7 +401,7 @@ func (s *AuthServiceImpl) ValidateToken(ctx context.Context, token string) (stri
 	// Check if token is blacklisted
 	isBlacklisted, err := s.repo.IsTokenBlacklisted(ctx, hashedToken)
 	if err != nil {
-		return "", err
+		return "Invalid token", err
 	}
 	if isBlacklisted {
 		return "", ErrInvalidToken
@@ -417,7 +410,7 @@ func (s *AuthServiceImpl) ValidateToken(ctx context.Context, token string) (stri
 	// Validate token
 	userID, err := s.jwtService.ValidateToken(token)
 	if err != nil {
-		return "", err
+		return "Invalid token", err
 	}
 
 	return userID.String(), nil
