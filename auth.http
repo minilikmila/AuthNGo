@@ -10,12 +10,12 @@ Content-Type: application/json
 }
 
 ### Login
-POST http://localhost:5001/api/v1/auth/login
+POST http://localhost:8080/api/v1/auth/login
 Content-Type: application/json
 
 {
   "email": "fahire2285@ethsms.com",
-  "password": "TestPassword123!"
+  "password": "new-pass-changed"
 } 
 
 ### Vefify Email
@@ -27,7 +27,7 @@ Content-Type: application/json
 }
 
 ### Forgot password
-POST http://localhost:5001/api/v1/auth/forgot-password
+POST http://localhost:8080/api/v1/auth/forgot-password
 Content-Type: application/json
 
 {
@@ -35,7 +35,7 @@ Content-Type: application/json
 } 
 
 ### Reset password
-POST http://localhost:5001/api/v1/auth/reset-password
+POST http://localhost:8080/api/v1/auth/reset-password
 Content-Type: application/json
 
 {
@@ -43,9 +43,29 @@ Content-Type: application/json
   "token": "reset_token"
 }
 
-### Profile password 
-GET  http://localhost:5001/api/v1/profile/8032ef1f-d52b-458b-a983-c05588235e0e
+### Get Profile  
+GET  http://localhost:8080/api/v1/profile/8032ef1f-d52b-458b-a983-c05588235e0e
 Content-Type: application/json
+
+### update profile
+PUT http://localhost:8080/api/v1/profile/8032ef1f-d52b-458b-a983-c05588235e0e
+Content-Type: application/json
+
+{
+      "id": "8032ef1f-d52b-458b-a983-c05588235e0e",
+      "email": "fahire2285@ethsms.com",
+      "name": "Test changed 6",
+      "phone": "+1234567890"
+}
+
+### update password
+PATCH http://localhost:8080/api/v1/change-password/8032ef1f-d52b-458b-a983-c05588235e0e
+Content-Type: application/json
+
+{
+      "current_password": "newPassword1",
+      "new_password": "new-pass-changed"
+}
 
 ### Logout // ACCESS TOKEN is stored in cookie , or you can pass BEARER token through Authorization header
 POST   http://localhost:5001/api/v1/auth/logout
